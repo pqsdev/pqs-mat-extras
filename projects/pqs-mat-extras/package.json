@@ -1,0 +1,27 @@
+{
+  "name": "pqs-mat-extras",
+  "version": "13.0.0",
+  "keywords": [
+    "angular",
+    "angular-material",
+    "mat-select",
+    "infinite-scroll",
+    "datasoruce",
+    "odata",
+    "filtrable",
+    "scroll",
+    "select",
+    "material",
+    "directive"
+  ],
+  "peerDependencies": {
+    "@angular/common": ">=6.0.0 <14.0.0",
+    "@angular/core": ">=6.0.0 <14.0.0",
+    "@angular/material": ">=6.0.0 <14.0.0",
+    "lodash-es": "4",
+    "odata-query": "6"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  }
+}
