@@ -17,9 +17,9 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "paths": {
-      "pqs-mat-extras": [
-        "dist/pqs-mat-extras/pqs-mat-extras",
-        "dist/pqs-mat-extras"
+      "ngx-mat-extras": [
+        "dist/ngx-mat-extras/ngx-mat-extras",
+        "dist/ngx-mat-extras"
       ]
     },
     "target": "es2017",

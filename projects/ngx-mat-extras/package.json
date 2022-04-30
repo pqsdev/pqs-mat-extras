@@ -1,6 +1,12 @@
 {
-  "name": "pqs-mat-extras",
-  "version": "13.0.0",
+  "name": "@pqsdev/ngx-mat-extras",
+  "version": "13.0.0-alpha",
+  "description": "Adds extra functionality to angular material. APHA VERSION DO NOT USE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pqsdev/pqs-mat-extras"
+  },
+  "private": false,
   "keywords": [
     "angular",
     "angular-material",

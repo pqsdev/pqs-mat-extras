@@ -3,23 +3,23 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "pqs-mat-extras": {
+    "ngx-mat-extras": {
       "projectType": "library",
-      "root": "projects/pqs-mat-extras",
-      "sourceRoot": "projects/pqs-mat-extras/src",
+      "root": "projects/ngx-mat-extras",
+      "sourceRoot": "projects/ngx-mat-extras/src",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "project": "projects/pqs-mat-extras/ng-package.json"
+            "project": "projects/ngx-mat-extras/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/pqs-mat-extras/tsconfig.lib.prod.json"
+              "tsConfig": "projects/ngx-mat-extras/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/pqs-mat-extras/tsconfig.lib.json"
+              "tsConfig": "projects/ngx-mat-extras/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -27,13 +27,13 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/pqs-mat-extras/src/test.ts",
-            "tsConfig": "projects/pqs-mat-extras/tsconfig.spec.json",
-            "karmaConfig": "projects/pqs-mat-extras/karma.conf.js"
+            "main": "projects/ngx-mat-extras/src/test.ts",
+            "tsConfig": "projects/ngx-mat-extras/tsconfig.spec.json",
+            "karmaConfig": "projects/ngx-mat-extras/karma.conf.js"
           }
         }
       }
     }
   },
-  "defaultProject": "pqs-mat-extras"
+  "defaultProject": "ngx-mat-extras"
 }

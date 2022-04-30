@@ -1,6 +1,6 @@
 {
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../dist/pqs-mat-extras",
+  "dest": "../../dist/ngx-mat-extras",
   "lib": {
     "entryFile": "src/public-api.ts"
   }
