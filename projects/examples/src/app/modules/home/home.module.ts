@@ -12,6 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSelectFilterModule } from 'projects/ngx-mat-extras/src/lib/mat-select-filter';
+import { MatSelectInfiniteScrollModule } from 'projects/ngx-mat-extras/src/lib/mat-select-infinite-scroll';
 
 @NgModule({
   declarations: [HomeComponent],
@@ -22,6 +23,7 @@ import { MatSelectFilterModule } from 'projects/ngx-mat-extras/src/lib/mat-selec
     HomeRoutingModule,
     HttpClientModule,
     MatSelectFilterModule,
+    MatSelectInfiniteScrollModule,
     FormsModule,
     ReactiveFormsModule,
     MatButtonModule,

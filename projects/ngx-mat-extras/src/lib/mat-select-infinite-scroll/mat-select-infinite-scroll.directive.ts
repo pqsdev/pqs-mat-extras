@@ -15,7 +15,7 @@ import { debounceTime, fromEvent, Subject, takeUntil, tap } from 'rxjs';
 const SELECT_ITEM_HEIGHT_EM = 3;
 
 @Directive({
-  selector: '[matSelectPager]',
+  selector: '[matSelectInfiniteScroll]',
 })
 export class MatSelectInfiniteScrollDirective
   implements OnInit, OnDestroy, AfterViewInit

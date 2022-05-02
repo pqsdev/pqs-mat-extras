@@ -56,6 +56,7 @@ export abstract class MatSelectFilterODataSource<
 
   public count$ = new Subject<number>();
   public countTotal$ = new Subject<number>();
+  public completed$ = new BehaviorSubject<boolean>(false);
 
   /**
    * Crea una nueva instancia de la clase ODataDataSource
@@ -76,6 +77,7 @@ export abstract class MatSelectFilterODataSource<
     this.isEnabledSubject = new BehaviorSubject<boolean>(isEnabled);
     this.pageSubject = new BehaviorSubject<number>(0);
     this.pageSizeSubject = new BehaviorSubject<number>(pageSize);
+
     this.txtFilterSubject.subscribe((filter) => {
       this.page = 0;
     });
@@ -177,7 +179,17 @@ export abstract class MatSelectFilterODataSource<
         }
 
         let filters = this.txtFilterMap(this.txtFilter, this.idFilter);
-        return this.getData(filters, this.page, this.pageSize);
+        return this.getData(filters, this.page, this.pageSize).pipe(
+          map((data) => {
+            this.countTotal$.next(data.count);
+            this.count$.next(data.value.length);
+            this.completed$.next(data.value.length == data.count);
+
+            return data.value;
+          })
+        );
+
+        //return this.getData(filters, this.page, this.pageSize);
       })
     );
 
@@ -196,13 +208,18 @@ export abstract class MatSelectFilterODataSource<
         }
 
         let filters = this.idFilterMap(this.idFilter);
-        return this.getData(filters);
+        return this.getData(filters, this.page, this.pageSize).pipe(
+          map((data) => {
+            return data.value;
+          })
+        );
       }),
       tap((result) => {
         if (result && result.length > 0)
           this.selectedDataSubject$.next(result[0]);
       })
     );
+
     return combineLatest([txt$, id$]).pipe(
       map(([txtResults, idResults]) => {
         const data = [...(idResults || []), ...(txtResults || [])];
@@ -217,11 +234,20 @@ export abstract class MatSelectFilterODataSource<
    * @param result
    * @returns
    */
-  private _mapODataResults(result: any): T[] {
+  private _mapODataResults(result: any): {
+    count: number;
+    value: T[];
+  } {
     if (result.value) {
-      return result.value;
+      return {
+        count: result['@odata.count'] ?? 0,
+        value: result.value,
+      };
     } else {
-      return result;
+      return {
+        count: result['@odata.count'] ?? 0,
+        value: result,
+      };
     }
   }
 
@@ -231,15 +257,21 @@ export abstract class MatSelectFilterODataSource<
 
   protected getData(
     filters: any,
-    page?: number,
+    pages?: number,
     pageSize?: number
-  ): Observable<T[]> {
+  ): Observable<{
+    count: number;
+    value: T[];
+  }> {
     const query = {} as any;
 
     if (this.selectedFields) query.select = this.selectedFields;
 
     if (this.orderBy) query.orderBy = this.orderBy;
-    if (page && pageSize) query.top = (pageSize ?? 0) * (page + 1);
+    if (pages || pageSize) {
+      query.top = (pageSize ?? 0) * ((pages ?? 0) + 1);
+      query.count = true;
+    }
 
     if (filters) {
       if (Array.isArray(filters)) {
@@ -253,6 +285,9 @@ export abstract class MatSelectFilterODataSource<
       } else query.filter = filters;
     }
     let url = this.url + buildQuery(query);
-    return this.httpClient.get(url).pipe(map(this._mapODataResults));
+
+    return this.httpClient
+      .get(url)
+      .pipe(map((data) => this._mapODataResults(data)));
   }
 }
