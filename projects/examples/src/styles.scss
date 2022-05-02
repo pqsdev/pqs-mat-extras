@@ -1,16 +1,12 @@
-
-
 @use '@angular/material'as mat;
 
-
 @include mat.core();
-
+mat.$theme-ignore-duplication-warnings: true;
 // Define a light theme
 $light-primary: mat.define-palette(mat.$indigo-palette);
 $light-accent: mat.define-palette(mat.$pink-palette);
 $light-warn: mat.define-palette(mat.$red-palette);
-$light-theme: mat.define-light-theme((color: (
-      primary: $light-primary,
+$light-theme: mat.define-light-theme((color: (primary: $light-primary,
       accent: $light-accent,
       warn: $light-warn,
     ),
@@ -29,18 +25,19 @@ html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+
 }
 
-// Apply the light theme only when the `.my-light-theme` CSS class is applied
-// to an ancestor element of the components (such as `body`).
-body.light {
+body.ligth {
   @include mat.all-component-themes($light-theme);
 }
-body.dark{
-@include mat.all-component-themes($dark-theme);
+
+body.dark {
+  @include mat.all-component-themes($dark-theme);
 
 }
 
