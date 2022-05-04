@@ -14,6 +14,15 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { ODataFilter } from './models/odata-filter';
 import buildQuery from 'odata-query';
+/**
+ * DATA TYPE USER FOR A COLLECTION OF URL PARAMETERS USED IN URLSearchParams native function
+ */
+export type URLParamsType =
+  | URLSearchParams
+  | string
+  | Record<string, string>
+  | string[][]
+  | null;
 
 export class ODataDataSource extends DataSource<any> {
   sort: MatSort | undefined;
@@ -24,6 +33,9 @@ export class ODataDataSource extends DataSource<any> {
   protected readonly isEnabledSubject: BehaviorSubject<boolean>;
   protected readonly filtersSubject = new BehaviorSubject<ODataFilter[]>([]);
   protected readonly urlSubject: BehaviorSubject<string>;
+  protected readonly urlParamsSubject = new BehaviorSubject<URLParamsType>(
+    null
+  );
 
   protected subscription: Subscription | undefined;
   public readonly dataSubject: BehaviorSubject<any[]> = new BehaviorSubject<
@@ -35,11 +47,11 @@ export class ODataDataSource extends DataSource<any> {
     new BehaviorSubject<any>(null);
 
   /**
-   * Crea una nueva instancia de la clase ODataDataSource
-   * @param httpClient cliente http para hacer la llamada
-   * @param initUrl URL inicial (opcional)
-   * @param debounceMillis tiempo de debounce ante cambios (opcional)
-   * @param isEnabled si esta habilitada la busqueda ante un cambio (opcional)
+   * New instance of @type { ODataDataSource }
+   * @param httpClient
+   * @param initUrl
+   * @param debounceMillis
+   * @param isEnabled
    */
   constructor(
     private readonly httpClient: HttpClient,
@@ -77,7 +89,8 @@ export class ODataDataSource extends DataSource<any> {
         }
 
         const result = this.getData(
-          this.urlSubject.value,
+          this.url,
+          this.urlParams,
           page,
           sortBy,
           sortOrder,
@@ -107,12 +120,13 @@ export class ODataDataSource extends DataSource<any> {
   }
 
   /**
-   * Crea un observable con todos los parametros uqe cambian
+   * Observable with parameters
    * @returns
    */
   private getObservable(): Observable<any> {
     const toObserve = [
       this.urlSubject,
+      this.urlParamsSubject,
       this.isEnabledSubject,
       this.filtersSubject,
     ] as Array<ObservableInput<any>>;
@@ -127,6 +141,12 @@ export class ODataDataSource extends DataSource<any> {
     return merge(...toObserve);
   }
 
+  /**
+   * Connects a collection viewer (such as a data-table) to this data source. Note that
+   * the stream provided will be accessed during change detection and should not directly change
+   * values that are bound in template views.
+   * @returns Observable that emits a new value when the data changes.
+   */
   connect(): Observable<any[]> {
     if (!this.subscription || this.subscription.closed) {
       this.subscription = this.createObservablePipe().subscribe((result) =>
@@ -137,48 +157,98 @@ export class ODataDataSource extends DataSource<any> {
     return this.dataSubject.asObservable();
   }
 
+  /**
+   * Disconnects a collection viewer (such as a data-table) from this data source. Can be used
+   * to perform any clean-up or tear-down operations when a view is being destroyed.
+   *
+   */
   disconnect(): void {
     if (this.subscription && this.dataSubject.observers.length === 0) {
       this.subscription.unsubscribe();
     }
   }
 
+  /** Gets the las data returned  by de odata query*/
   get data(): any[] {
     return this.dataSubject.value;
   }
-  set data(data) {
-    this.dataSubject.next(data);
-  }
 
+  /** Loading indicator*/
   get loading(): Observable<boolean> {
     return this.loadingSubject.asObservable();
   }
 
+  /** Errors returnes in the odata query*/
   get errors(): Observable<any> {
     return this.errorSubject.asObservable();
   }
 
+  /**
+   * Return the filters set to de @type ODataSoruce
+   */
   get filters(): ODataFilter[] {
     return this.filtersSubject.value;
   }
+
+  /**
+   * Sets the  @type ODataSoruce filters
+   */
   set filters(filters: ODataFilter[]) {
     this.filtersSubject.next(filters);
   }
 
+  /**
+   * Gets the base URL for the OData Query
+   */
   public get url(): string {
     return this.urlSubject.value;
   }
 
+  /**
+   * Sets the base URL for the OData Query
+   */
   public set url(v: string) {
     this.urlSubject.next(v);
   }
 
+  /**
+   * If false the ODataSoruce will not refrresh
+   */
+  public get enabled(): boolean {
+    return this.isEnabledSubject.value;
+  }
+
+  /**
+   * If false the ODataSoruce will not refrresh
+   */
+  public set enabled(v: boolean) {
+    this.isEnabledSubject.next(v);
+  }
+
+  /**
+   * Get the aditional URL params for the OData Query
+   */
+  public get urlParams(): URLParamsType {
+    return this.urlParamsSubject.value;
+  }
+
+  /**
+   * Sets the aditional URL params for the OData Query
+   */
+  public set urlParams(v: URLParamsType) {
+    this.urlParamsSubject.next(v);
+  }
+
+  /**
+   * Execute the las ODataQuery one more time
+   */
   refresh(): void {
     this.filtersSubject.next(this.filtersSubject.value);
   }
 
   protected getData(
     url: string,
+    urlParams: URLParamsType,
     page: number,
     sortBy: string,
     order: string,
@@ -216,6 +286,16 @@ export class ODataDataSource extends DataSource<any> {
       query.filter = filterQuery;
     }
     url += buildQuery(query);
+
+    if (urlParams) {
+      if (url.indexOf('?') < 0) {
+        url += '?';
+      } else {
+        url += '&';
+      }
+
+      url += new URLSearchParams(urlParams).toString();
+    }
     return this.httpClient.get(url) as Observable<object>;
   }
 
