@@ -1,59 +1,84 @@
-<div class="mat-elevation-z2" *ngIf="1">
-  <table mat-table matSort class="data-table">
-    <ng-container matColumnDef="CustomerName">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer</th>
-      <td mat-cell *matCellDef="let row">{{ row.CustomerName }}</td>
-    </ng-container>
+<div class="flex flex-col flex-auto min-w-0" *ngIf="1">
 
-    <ng-container matColumnDef="Discount">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header style="direction: rtl">Discount</th>
-      <td mat-cell *matCellDef="let row" style="direction: rtl">{{ row.Discount |percent }}</td>
-    </ng-container>
+  <div
+    class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
+    <div class="flex-1 min-w-0">
+      <div class="mt-2">
+        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
+          ODATA SOURCE EXAMPLE
+        </h2>
+      </div>
+    </div>
+  </div>
 
-    <ng-container matColumnDef="OrderID">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header style="direction: rtl">Order</th>
-      <td mat-cell *matCellDef="let row" style="direction: rtl">{{ row.OrderID }}</td>
-    </ng-container>
+  <div class="flex-auto p-6 sm:p-10">
+    <div class="max-w-full">
 
-    <ng-container matColumnDef="ProductID">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header style="direction: rtl">Product ID</th>
-      <td mat-cell *matCellDef="let row" style="direction: rtl">{{ row.ProductID }}</td>
-    </ng-container>
+      <div class="prose prose-sm max-w-3xl">
+        <p>
+          Sample for<code>ODataDataSource</code>
+        </p>
 
-    <ng-container matColumnDef="ProductName">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Product Name</th>
-      <td mat-cell *matCellDef="let row">{{ row.ProductName }}</td>
-    </ng-container>
+      </div>
 
 
+      <table mat-table matSort class="data-table">
+        <ng-container matColumnDef="CustomerName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer</th>
+          <td mat-cell *matCellDef="let row">{{ row.CustomerName }}</td>
+        </ng-container>
 
-    <ng-container matColumnDef="Salesperson">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Sales person</th>
-      <td mat-cell *matCellDef="let row">{{ row.Salesperson }}</td>
-    </ng-container>
+        <ng-container matColumnDef="Discount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="direction: rtl">Discount</th>
+          <td mat-cell *matCellDef="let row" style="direction: rtl">{{ row.Discount |percent }}</td>
+        </ng-container>
 
-    <ng-container matColumnDef="ShipperName">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Shipper</th>
-      <td mat-cell *matCellDef="let row">{{ row.ShipperName }}</td>
-    </ng-container>
-    <ng-container matColumnDef="Quantity">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header style="direction: rtl">QTY</th>
-      <td mat-cell *matCellDef="let row" style="direction: rtl">{{ row.Quantity | number }}</td>
-    </ng-container>
-    <ng-container matColumnDef="UnitPrice">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header style="direction: rtl">UnitPrice</th>
-      <td mat-cell *matCellDef="let row" style="direction: rtl">{{ row.UnitPrice | currency }}</td>
-    </ng-container>
+        <ng-container matColumnDef="OrderID">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="direction: rtl">Order</th>
+          <td mat-cell *matCellDef="let row" style="direction: rtl">{{ row.OrderID }}</td>
+        </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
+        <ng-container matColumnDef="ProductID">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="direction: rtl">Product ID</th>
+          <td mat-cell *matCellDef="let row" style="direction: rtl">{{ row.ProductID }}</td>
+        </ng-container>
 
-  <mat-paginator class="mat-paginator-sticky" [pageSizeOptions]="[5, 10, 25, 50]" pageSize="50"></mat-paginator>
+        <ng-container matColumnDef="ProductName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Product Name</th>
+          <td mat-cell *matCellDef="let row">{{ row.ProductName }}</td>
+        </ng-container>
 
-  <div class="overlay" *ngIf="this.loading$ | async">
-    <div class="overlay_inner">
-      <div class="overlay_content"><span class="spinner"></span></div>
+
+
+        <ng-container matColumnDef="Salesperson">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Sales person</th>
+          <td mat-cell *matCellDef="let row">{{ row.Salesperson }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="ShipperName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Shipper</th>
+          <td mat-cell *matCellDef="let row">{{ row.ShipperName }}</td>
+        </ng-container>
+        <ng-container matColumnDef="Quantity">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="direction: rtl">QTY</th>
+          <td mat-cell *matCellDef="let row" style="direction: rtl">{{ row.Quantity | number }}</td>
+        </ng-container>
+        <ng-container matColumnDef="UnitPrice">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="direction: rtl">UnitPrice</th>
+          <td mat-cell *matCellDef="let row" style="direction: rtl">{{ row.UnitPrice | currency }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <mat-paginator class="mat-paginator-sticky" [pageSizeOptions]="[5, 10, 25, 50]" pageSize="50"></mat-paginator>
+
+      <div class="overlay" *ngIf="this.loading$ | async">
+        <div class="overlay_inner">
+          <div class="overlay_content"><span class="spinner"></span></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

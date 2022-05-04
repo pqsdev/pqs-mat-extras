@@ -1,36 +1,59 @@
-<div class="h-full">
+<div class="flex flex-col flex-auto min-w-0" *ngIf="1">
 
-  <form name="theForm" [formGroup]="theForm" class="flex flex-col w-100">
+  <div
+    class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
+    <div class="flex-1 min-w-0">
+      <div class="mt-2">
+        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
+          MAT-SELECT EXTRAS
+        </h2>
+      </div>
+    </div>
+  </div>
 
-    <mat-form-field appearance="fill" class="flex flex-row">
-      <mat-select placeholder="Basic" formControlName="ID" matSelectInfiniteScroll (infiniteScroll)="getNextBatch()"
-        [complete]="(this.productDataSource.completed$ | async) ?? false">
-        <mat-select-filter #productFilter formControlName="ID" [dataSource]="productDataSource"></mat-select-filter>
-        <mat-option disabled="true" [value]="0">
-          -- NADA --
-        </mat-option>
-        <mat-option *ngFor="let product of productDataSource.dataSubject | async" [value]="product.ProductID">
-          {{product.ProductName}}
-        </mat-option>
-        <mat-option disabled="true">
-          <span>Registros {{productDataSource.count$ | async}}/{{productDataSource.countTotal$ | async}}</span>
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <br>
-    <!--coountries-->
-    <mat-form-field appearance="fill">
-      <mat-select placeholder="Basic" formControlName="cca3">
-        <mat-select-filter #productFilter formControlName="cca3" [dataSource]="countriesDataSoruce">
-        </mat-select-filter>
-        <mat-option [value]="0">
-          -- NADA --
-        </mat-option>
-        <mat-option *ngFor="let entity of countriesDataSoruce.dataSubject | async" [value]="entity.cca3">
-          {{entity.name.common}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </form>
+  <div class="flex-auto p-6 sm:p-10">
+    <div class="max-w-full">
 
+      <div class="prose prose-sm max-w-3xl">
+        <p>
+          Sample for <code>MatSelectFilter</code> and <code>matSelectInfiniteScroll</code>
+        </p>
+
+      </div>
+
+
+      <form name="theForm" [formGroup]="theForm" class="flex flex-col w-100">
+
+        <mat-form-field appearance="fill" class="flex flex-row">
+          <mat-select placeholder="Basic" formControlName="ID" matSelectInfiniteScroll (infiniteScroll)="getNextBatch()"
+            [complete]="(this.productDataSource.completed$ | async) ?? false">
+            <mat-select-filter #productFilter formControlName="ID" [dataSource]="productDataSource"></mat-select-filter>
+            <mat-option disabled="true" [value]="0">
+              -- NADA --
+            </mat-option>
+            <mat-option *ngFor="let product of productDataSource.dataSubject | async" [value]="product.ProductID">
+              {{product.ProductName}}
+            </mat-option>
+            <mat-option disabled="true">
+              <span>Registros {{productDataSource.count$ | async}}/{{productDataSource.countTotal$ | async}}</span>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <br>
+        <!--coountries-->
+        <mat-form-field appearance="fill">
+          <mat-select placeholder="Basic" formControlName="cca3">
+            <mat-select-filter #productFilter formControlName="cca3" [dataSource]="countriesDataSoruce">
+            </mat-select-filter>
+            <mat-option [value]="0">
+              -- NADA --
+            </mat-option>
+            <mat-option *ngFor="let entity of countriesDataSoruce.dataSubject | async" [value]="entity.cca3">
+              {{entity.name.common}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
+    </div>
+  </div>
 </div>
