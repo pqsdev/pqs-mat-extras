@@ -1,0 +1,36 @@
+<div class="h-full">
+
+  <form name="theForm" [formGroup]="theForm" class="flex flex-col w-100">
+
+    <mat-form-field appearance="fill" class="flex flex-row">
+      <mat-select placeholder="Basic" formControlName="ID" matSelectInfiniteScroll (infiniteScroll)="getNextBatch()"
+        [complete]="(this.productDataSource.completed$ | async) ?? false">
+        <mat-select-filter #productFilter formControlName="ID" [dataSource]="productDataSource"></mat-select-filter>
+        <mat-option disabled="true" [value]="0">
+          -- NADA --
+        </mat-option>
+        <mat-option *ngFor="let product of productDataSource.dataSubject | async" [value]="product.ProductID">
+          {{product.ProductName}}
+        </mat-option>
+        <mat-option disabled="true">
+          <span>Registros {{productDataSource.count$ | async}}/{{productDataSource.countTotal$ | async}}</span>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <br>
+    <!--coountries-->
+    <mat-form-field appearance="fill">
+      <mat-select placeholder="Basic" formControlName="cca3">
+        <mat-select-filter #productFilter formControlName="cca3" [dataSource]="countriesDataSoruce">
+        </mat-select-filter>
+        <mat-option [value]="0">
+          -- NADA --
+        </mat-option>
+        <mat-option *ngFor="let entity of countriesDataSoruce.dataSubject | async" [value]="entity.cca3">
+          {{entity.name.common}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+
+</div>

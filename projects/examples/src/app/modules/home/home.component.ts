@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   MatSelectFilterFastODataSource,
@@ -12,53 +12,21 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   private _onDestroy = new Subject<void>();
-  theForm: FormGroup;
 
-  productDataSource: MatSelectFilterFastODataSource<any>;
-  countriesDataSoruce: MatSelectFilterObservableDataSource<any>;
+  constructor() {}
+  // -----------------------------------------------------------------------------------------------------
+  // @ Lifecycle hooks
+  // -----------------------------------------------------------------------------------------------------
 
-  //url: 'https://services.odata.org/Experimental/Northwind/Northwind.svc/Categories'}
-
-  constructor(private readonly httpClient: HttpClient, fb: FormBuilder) {
-    this.theForm = fb.group({
-      ID: 17,
-      cca3: 'URY',
-    });
-
-    this.productDataSource = new MatSelectFilterFastODataSource<any>(
-      this.httpClient,
-      'https://services.odata.org/Experimental/Northwind/Northwind.svc/Products',
-      0,
-      true,
-      'ProductName',
-      'ProductID'
-    );
-    // le agrega un order by y acota los campso seleccionados
-    //this.productDataSource.orderBy = ['ProductName'];
-    //this.productDataSource.selectedFields = ['ProductID', 'ProductName'];
-
-    this.productDataSource.selectedValueChanged
-      .pipe(takeUntil(this._onDestroy))
-      .subscribe((val) => {
-        console.log('PRODUCT: ', val);
-      });
-
-    this.countriesDataSoruce = new MatSelectFilterObservableDataSource<any>(
-      this.httpClient.get<any>('https://restcountries.com/v3.1/all'),
-      'name.common',
-      'cca3'
-    );
-
-    this.countriesDataSoruce.selectedValueChanged
-      .pipe(takeUntil(this._onDestroy))
-      .subscribe((val) => {
-        console.log('PAIS: ', val);
-      });
-  }
-  public getNextBatch() {
-    this.productDataSource.page++;
-  }
+  /**
+   * On init
+   */
   ngOnInit(): void {}
+
+  ngOnDestroy(): void {
+    this._onDestroy.next();
+    this._onDestroy.complete();
+  }
 }
