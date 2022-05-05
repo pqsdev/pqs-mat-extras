@@ -2,6 +2,24 @@
 
 Collection of components that adds extra functionality to [angular material](https://material.angular.io)
 
+## Installation
+
+```bash
+npm i @pqsdev/ngx-mat-extras
+```
+
+## Coding
+
+```bash
+## clone this repo
+git clone https://github.com/pqsdev/pqs-mat-extras.git
+cd ./pqs-mat-extras
+## install dependencies
+npm i
+## vscode debug is configured also
+ng serve #louches the example proyect
+```
+
 ## ODATA - DATASOURCE
 
 Implementation of [CDK's DataSource](https://material.angular.io/cdk/collections/api#DataSource) that can work with ODATA version 4. It supports sorting with `mat-sort` and pagination with `mat-paginator` as well as per column filtering. Based on [Marcin Suty's odata-data-source](https://github.com/relair/odata-data-source)
@@ -66,8 +84,6 @@ Constructor
 
 ## MAT-SELECT INTINITE SCROLL
 
-
-
 Adds missing infinite scroll functionality for the [angular material select component](https://material.angular.io/components/select).
 
 Based on [HaidarZ/ng-mat-select-infinite-scroll](https://github.com/HaidarZ/ng-mat-select-infinite-scroll)
@@ -85,11 +101,3 @@ Based on [HaidarZ/ng-mat-select-infinite-scroll](https://github.com/HaidarZ/ng-m
 | Property         | Description                                                                     | Type                 |
 | ---------------- | ------------------------------------------------------------------------------- | -------------------- |
 | `infiniteScroll` | Emitted when the scroller inside the `mat-select` reaches the required distance | `EventEmitter<void>` |
-
-## Installation
-
-WIP
-
-## Compatibility
-
-WIP
