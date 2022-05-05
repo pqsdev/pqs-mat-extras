@@ -23,7 +23,9 @@ export type URLParamsType =
   | Record<string, string>
   | string[][]
   | null;
-
+/**
+ * ODATA Data Sorurce of Angular CDK @type { DataSource }
+ */
 export class ODataDataSource extends DataSource<any> {
   sort: MatSort | undefined;
   paginator: MatPaginator | undefined;

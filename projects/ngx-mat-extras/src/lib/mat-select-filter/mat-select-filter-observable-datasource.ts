@@ -8,10 +8,19 @@ import {
 import { tap, map } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { MatSelectFilterDataSource } from './mat-select-filter-datasource';
-
+/**
+ * implementation of @type MatSelectFilterDataSource that's allows a @type Observable data source.
+ */
 export class MatSelectFilterObservableDataSource<
   T
 > extends MatSelectFilterDataSource<T> {
+  /**
+   * Creates a new instance of
+   * @param source
+   * @param filterProperty
+   * @param keyProperty
+   * @param groupByProperty
+   */
   constructor(
     private readonly source: Observable<T[]> | T[],
     private readonly filterProperty: string,
