@@ -4,7 +4,8 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   MatSelectFilterFastODataSource,
   MatSelectFilterObservableDataSource,
-} from 'projects/ngx-mat-extras/src/lib/mat-select-filter';
+} from 'projects/ngx-mat-extras/src/public-api';
+
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({

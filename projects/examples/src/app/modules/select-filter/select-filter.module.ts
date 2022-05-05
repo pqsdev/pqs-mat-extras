@@ -9,11 +9,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
-import { MatSelectFilterModule } from 'projects/ngx-mat-extras/src/lib/mat-select-filter';
-import { MatSelectInfiniteScrollModule } from 'projects/ngx-mat-extras/src/lib/mat-select-infinite-scroll';
 
 import { SelectFilterRoutingModule } from './select-filter-routing.module';
 import { SelectFilterComponent } from './select-filter.component';
+import {
+  MatSelectFilterModule,
+  MatSelectInfiniteScrollModule,
+} from 'projects/ngx-mat-extras/src/public-api';
 
 @NgModule({
   declarations: [SelectFilterComponent],

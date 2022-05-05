@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
-import { ODataDataSource } from 'projects/ngx-mat-extras/src/lib/odata';
+import { ODataDataSource } from 'projects/ngx-mat-extras/src/public-api';
 
 @Component({
   selector: 'app-odata-source',
