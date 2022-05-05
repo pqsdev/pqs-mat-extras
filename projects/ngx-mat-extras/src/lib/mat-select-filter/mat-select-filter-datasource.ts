@@ -1,31 +1,49 @@
 import { DataSource } from '@angular/cdk/table';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
-
+/**
+ * Abstract data data source for @type MatSelectFilterComponent . All MatSelectFilterComponent must implement this abstract class
+ */
 export abstract class MatSelectFilterDataSource<T> extends DataSource<T> {
-  protected readonly txtFilterSubject = new BehaviorSubject<string>('');
   /**
-   * Filtro por descripcion
+   * Emmits a value every time the {@link txtFilter} changes
+   */
+  protected readonly txtFilterSubject = new BehaviorSubject<string>('');
+
+  /**
+   * Gets the text filter value
    */
   get txtFilter(): string {
     return this.txtFilterSubject.value;
   }
+  /**
+   * Sets the text filter value
+   */
   set txtFilter(value: string) {
     this.txtFilterSubject.next(value);
   }
+  /**
+   * Clears teh txt value if conditional is true
+   * @param conditional
+   */
   clear(conditional: boolean) {
     if (conditional) this.txtFilterSubject.next('');
   }
-
+  /**
+   * Emmits a value every time the {@link idFilter} changes
+   */
   protected readonly idFiltersSubject = new BehaviorSubject<any>(undefined);
 
   /**
-   * Filtro por id
+   * Gets the id filter value
    */
   get idFilter(): any {
     return this.idFiltersSubject.value;
   }
 
+  /**
+   * Sets the id filter value
+   */
   set idFilter(value: any) {
     this.idFiltersSubject.next(value);
   }
@@ -33,7 +51,7 @@ export abstract class MatSelectFilterDataSource<T> extends DataSource<T> {
   protected readonly loadingSubject: BehaviorSubject<boolean> =
     new BehaviorSubject<boolean>(false);
   /**
-   * Observable que emite un valor cuando la informacion se esta cargando
+   * Emmits `true` when loading `false` when finished or error
    */
   get loading(): Observable<boolean> {
     return this.loadingSubject.asObservable();
@@ -42,7 +60,7 @@ export abstract class MatSelectFilterDataSource<T> extends DataSource<T> {
   protected readonly errorSubject: BehaviorSubject<any> =
     new BehaviorSubject<any>(null);
   /**
-   * Observable que emite un valor si da error la llamada de HTTP
+   * Emmits value if there is an error
    */
   get errors(): Observable<any> {
     return this.errorSubject.asObservable();

@@ -3,17 +3,26 @@ import * as _ from 'lodash';
 import { MatSelectFilterODataSource } from './mat-select-filter-odatasource';
 
 /**
- * Origen de datosimple que permite definir un fiultro por ID y descripcion
+ * Simple implementation of @type MatSelectFilterODataSource
  */
 export class MatSelectFilterFastODataSource<
   T
 > extends MatSelectFilterODataSource<T> {
+  /**
+   *
+   * @param httpClient http client
+   * @param initUrl initial valui of base url
+   * @param debounceMillis debouce
+   * @param isEnabled enabled initia lvalue
+   * @param filterProperty The data source will filter the input text with this property. **NESTED OBJECTS PROPERTIES ARE NOT SUPPORTED**
+   * @param keyProperty Used to set the value of the control. **NESTED OBJECTS PROPERTIES ARE NOT SUPPORTED**
+   */
   constructor(
     httpClient: HttpClient,
     initUrl: string = '',
     debounceMillis = 0,
     isEnabled = true,
-    private readonly filterProperty: string ,
+    private readonly filterProperty: string,
     private readonly keyProperty: string
   ) {
     super(httpClient, initUrl, debounceMillis, isEnabled);

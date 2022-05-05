@@ -16,9 +16,9 @@ export class MatSelectFilterObservableDataSource<
 > extends MatSelectFilterDataSource<T> {
   /**
    * Creates a new instance of
-   * @param source
-   * @param filterProperty
-   * @param keyProperty
+   * @param source observable source
+   * @param filterProperty The data source will filter the input text with this property. Nested properties are allowed see https://lodash.com/docs/4.17.15#get
+   * @param keyProperty The data source will set the selected value with this property. Nested properties are allowed see https://lodash.com/docs/4.17.15#get
    * @param groupByProperty
    */
   constructor(
@@ -58,7 +58,7 @@ export class MatSelectFilterObservableDataSource<
   }
 
   /**
-   * Crea un observable con todos los parametros uqe cambian
+   * Creates an bundle of parameter observables
    * @returns
    */
   private getObservable(): Observable<T[]> {
@@ -99,7 +99,10 @@ export class MatSelectFilterObservableDataSource<
       tap(() => this.loadingSubject.next(false))
     );
   }
-
+  /**
+   * Sets the value of teh selectd data using the key property and value
+   * @param key
+   */
   setSelectedData(key: any): void {
     let data = this.dataSubject.value;
     let selected = _.filter(
