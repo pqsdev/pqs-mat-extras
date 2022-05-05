@@ -6,12 +6,11 @@ Collection of components that adds extra functionality to [angular material](htt
 
 Implementation of [CDK's DataSource](https://material.angular.io/cdk/collections/api#DataSource) that can work with ODATA version 4. It supports sorting with `mat-sort` and pagination with `mat-paginator` as well as per column filtering. Based on [Marcin Suty's odata-data-source](https://github.com/relair/odata-data-source)
 
-![Datasoruce](img/mat-select-filter-datasource.svg)
-
 ## MAT-SELECT-FILTER
 
 Child component of [angular material select ](https://material.angular.io/components/select) that allows to filter from a data source.
 
+![Datasoruce](img/mat-select-filter-datasource.svg)
 
 ### MatSelectFilterDataSource
 
