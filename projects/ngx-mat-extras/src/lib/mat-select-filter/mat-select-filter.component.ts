@@ -2,7 +2,7 @@ import {
   Component,
   OnInit,
   Input,
-   OnDestroy,
+  OnDestroy,
   AfterContentChecked,
 } from '@angular/core';
 import {
@@ -13,14 +13,11 @@ import {
   ControlValueAccessor,
 } from '@angular/forms';
 import { A, Z, ZERO, NINE, SPACE, END, HOME } from '@angular/cdk/keycodes';
-import { BehaviorSubject,  Subject, Subscription } from 'rxjs';
-import { debounceTime,  distinctUntilChanged,  takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
-import { MatSelectFilterDataSource } from '.';
-import {
-  CollectionViewer,
-  isDataSource,
-} from '@angular/cdk/collections';
+import { CollectionViewer, isDataSource } from '@angular/cdk/collections';
+import { MatSelectFilterDataSource } from './mat-select-filter-datasource';
 
 @Component({
   selector: 'mat-select-filter',
@@ -164,7 +161,6 @@ export class MatSelectFilterComponent<T>
     this._renderChangeSubscription = dataStream!
       .pipe(takeUntil(this._onDestroy))
       .subscribe();
-
   }
   /**
    * Switch to the provided data source by resetting the data and unsubscribing from the current
@@ -199,11 +195,10 @@ export class MatSelectFilterComponent<T>
   // -----------------------------------------------------------------------------------------------------
 
   ngOnInit(): void {
-
     if (this.controlContainer)
       this.controlContainer.control
         ?.get(this.formControlName)!
-        .valueChanges!.pipe(takeUntil(this._onDestroy),distinctUntilChanged())
+        .valueChanges!.pipe(takeUntil(this._onDestroy), distinctUntilChanged())
         .subscribe((value) => {
           if (value != this.selectedValue$.value) {
             this.writeValue(value, true);
@@ -211,15 +206,21 @@ export class MatSelectFilterComponent<T>
         });
 
     this.searchForm.valueChanges
-      .pipe(takeUntil(this._onDestroy),distinctUntilChanged(), debounceTime(200))
+      .pipe(
+        takeUntil(this._onDestroy),
+        distinctUntilChanged(),
+        debounceTime(200)
+      )
       .subscribe((formData) => {
         let textValue = formData['value'] || '';
         this.dataSource.txtFilter = textValue;
       });
 
-    this.selectedValue$.pipe(takeUntil(this._onDestroy),distinctUntilChanged()).subscribe((id) => {
-      this.dataSource.idFilter = id;
-    });
+    this.selectedValue$
+      .pipe(takeUntil(this._onDestroy), distinctUntilChanged())
+      .subscribe((id) => {
+        this.dataSource.idFilter = id;
+      });
 
     this.dataSource.loading
       .pipe(takeUntil(this._onDestroy))

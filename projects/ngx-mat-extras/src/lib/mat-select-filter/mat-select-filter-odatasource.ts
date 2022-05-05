@@ -13,7 +13,7 @@ import { switchMap, tap, map, debounceTime } from 'rxjs/operators';
 import buildQuery, { OrderBy } from 'odata-query';
 import * as _ from 'lodash';
 import { MatSelectFilterDataSource } from './mat-select-filter-datasource';
-import { ODataFilter } from '../odata';
+import { ODataFilter } from '../odata/models';
 
 /**
  * Base para origenes de datos O-DATA
