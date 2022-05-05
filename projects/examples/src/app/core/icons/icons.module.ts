@@ -13,6 +13,20 @@ export class IconsModule {
     private _domSanitizer: DomSanitizer,
     private _matIconRegistry: MatIconRegistry
   ) {
+    //register icons
+    this._matIconRegistry.addSvgIconInNamespace(
+      'sw',
+      'vader',
+      this._domSanitizer.bypassSecurityTrustResourceUrl(
+        'assets/icons/vader.svg'
+      )
+    );
+    this._matIconRegistry.addSvgIconInNamespace(
+      'sw',
+      'yoda',
+      this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/yoda.svg')
+    );
+
     // Register icon sets
     this._matIconRegistry.addSvgIconSetInNamespace(
       'fas',

@@ -3,22 +3,26 @@
   <mat-sidenav-container class="example-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
     <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
       fixedTopGap="56">
-      <mat-nav-list>
-        <mat-list-item>
-          <mat-icon svgIcon="fas:home"></mat-icon>
-          <a mat-list-item routerLink="">HOME</a>
-        </mat-list-item>
-        <mat-list-item>
-          <mat-icon svgIcon="storage"></mat-icon>
-          <a mat-list-item routerLink="odata-source">ODATA DATASOURCE</a>
-        </mat-list-item>
+      <div class="flex flex-col h-full">
+        <mat-nav-list>
+          <mat-list-item>
+            <mat-icon svgIcon="fas:home"></mat-icon>
+            <a mat-list-item routerLink="">HOME</a>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon svgIcon="storage"></mat-icon>
+            <a mat-list-item routerLink="odata-source">ODATA DATASOURCE</a>
+          </mat-list-item>
 
-        <mat-list-item>
-          <mat-icon svgIcon="feather:credit-card"></mat-icon>
-          <a mat-list-item routerLink="select-filter">MAT-SELECT</a>
-        </mat-list-item>
+          <mat-list-item>
+            <mat-icon svgIcon="feather:credit-card"></mat-icon>
+            <a mat-list-item routerLink="select-filter">MAT-SELECT</a>
+          </mat-list-item>
 
-      </mat-nav-list>
+        </mat-nav-list>
+        <div class="flex-1"></div>
+        <span>PQS {{currentYear}}</span>
+      </div>
     </mat-sidenav>
 
 
@@ -29,12 +33,13 @@
         </button>
         <h1 class="example-app-name">PQS MAT EXTAS SAMPLES</h1>
         <span class="flex-1"></span>
-        <button *ngIf="!(isDarkTheme$  | async)" mat-icon-button aria-label="Enable dark theme"
-          (click)="toggleScheme()">
-          <mat-icon svgIcon="feather:moon"></mat-icon>
+        <button *ngIf="!(isDarkTheme$  | async)" mat-icon-button aria-label="Enable dark theme" (click)="toggleScheme()"
+          matTooltip="Go to The Dark Side of the Force">
+          <mat-icon svgIcon="sw:vader"></mat-icon>
         </button>
-        <button *ngIf="isDarkTheme$  | async" mat-icon-button aria-label="Enable ligth theme" (click)="toggleScheme()">
-          <mat-icon svgIcon="feather:sun"></mat-icon>
+        <button *ngIf="isDarkTheme$  | async" mat-icon-button aria-label="Enable ligth theme" (click)="toggleScheme()"
+          matTooltip="Go to The Light Side of the Force">
+          <mat-icon svgIcon="sw:yoda"></mat-icon>
         </button>
       </mat-toolbar>
       <!-- *ngIf="true" hack is required here for router-outlet to work correctly.
