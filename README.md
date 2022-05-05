@@ -1,4 +1,4 @@
-# PQS ANGUALR MATERIAL EXTRAS
+# PQS ANGULAR MATERIAL EXTRAS
 
 Collection of components that adds extra functionality to [angular material](https://material.angular.io)
 
@@ -26,7 +26,7 @@ Implementation of [CDK's DataSource](https://material.angular.io/cdk/collections
 
 ## MAT-SELECT-FILTER
 
-Child component of [angular material select ](https://material.angular.io/components/select) that allows to filter from a data source.
+Child component of [angular material select](https://material.angular.io/components/select) that allows to filter from a data source.
 
 ![Datasoruce](img/mat-select-filter-datasource.svg)
 
