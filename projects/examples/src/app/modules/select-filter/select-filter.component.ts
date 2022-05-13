@@ -33,7 +33,7 @@ export class SelectFilterComponent implements OnInit {
       'https://services.odata.org/Experimental/Northwind/Northwind.svc/Products',
       0,
       true,
-      'ProductName',
+      ['ProductName', 'QuantityPerUnit'],
       'ProductID'
     );
     // le agrega un order by y acota los campso seleccionados
