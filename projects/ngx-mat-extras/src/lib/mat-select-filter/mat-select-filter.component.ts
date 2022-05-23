@@ -178,6 +178,14 @@ export class MatSelectFilterComponent<T>
       this._renderChangeSubscription = null;
     }
 
+    if (dataSource) {
+      dataSource.idFilter = this.selectedValue$.value;
+      dataSource.txtFilter = this.searchForm.value.value;
+      dataSource.loading
+        .pipe(takeUntil(this._onDestroy))
+        .subscribe((loading) => (this.localSpinner = loading));
+    }
+
     this._dataSource = dataSource;
   }
   /**
@@ -213,18 +221,14 @@ export class MatSelectFilterComponent<T>
       )
       .subscribe((formData) => {
         let textValue = formData['value'] || '';
-        this.dataSource.txtFilter = textValue;
+        if (this.dataSource) this.dataSource.txtFilter = textValue;
       });
 
     this.selectedValue$
       .pipe(takeUntil(this._onDestroy), distinctUntilChanged())
       .subscribe((id) => {
-        this.dataSource.idFilter = id;
+        if (this.dataSource) this.dataSource.idFilter = id;
       });
-
-    this.dataSource.loading
-      .pipe(takeUntil(this._onDestroy))
-      .subscribe((loading) => (this.localSpinner = loading));
   }
 
   ngAfterContentChecked(): void {

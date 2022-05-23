@@ -1,0 +1,18 @@
+.mat-paginator-center {
+  display: flex;
+  justify-content: left;
+
+}
+
+.mat-paginator-fixed-bottom {
+  position: sticky;
+  bottom: 0;
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-top-color: grey;
+  z-index: 100;
+}
+
+::ng-deep .mat-select-panel.example-long-panel {
+  max-height: 500px;
+}

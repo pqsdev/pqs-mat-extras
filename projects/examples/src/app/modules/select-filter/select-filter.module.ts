@@ -16,6 +16,7 @@ import {
   MatSelectFilterModule,
   MatSelectInfiniteScrollModule,
 } from 'projects/ngx-mat-extras/src/public-api';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [SelectFilterComponent],
@@ -35,6 +36,7 @@ import {
     MatSelectModule,
     MatProgressSpinnerModule,
     MatInputModule,
+    MatPaginatorModule,
   ],
 })
 export class SelectFilterModule {}

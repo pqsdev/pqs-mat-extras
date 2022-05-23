@@ -14,39 +14,73 @@
   <div class="flex-auto p-6 sm:p-10">
     <div class="max-w-full">
 
-      <div class="prose prose-sm max-w-3xl">
-        <p>
-          Sample for <code>MatSelectFilter</code> and <code>matSelectInfiniteScroll</code>
-        </p>
-
-      </div>
-
-
       <form name="theForm" [formGroup]="theForm" class="flex flex-col w-100">
+        <!--ODATA + mat-paginator-->
+        <div class="mr-4 text-2xl md:text-3xl font-semibold tracking-tight leading-7">PAGED</div>
+        <div class="prose prose-sm max-w-3xl">
+          <p>
+            Sample for <code>MatSelectFilter</code> and <code>mat-paginator</code>
+          </p>
 
+        </div>
         <mat-form-field appearance="fill" class="flex flex-row">
-          <mat-select placeholder="Basic" formControlName="ID" matSelectInfiniteScroll (infiniteScroll)="getNextBatch()"
-            [complete]="(this.productDataSource.completed$ | async) ?? false">
-            <mat-select-filter #productFilter formControlName="ID" [dataSource]="productDataSource"></mat-select-filter>
-            <mat-option disabled="true" [value]="0">
-              -- NADA --
+          <mat-select placeholder="Basic" formControlName="productId1" panelClass="example-long-panel">
+            <mat-select-filter #productFilter formControlName="productId1" [dataSource]="productDataSource">
+            </mat-select-filter>
+            <mat-option [value]="0" [disabled]="true">
+              -- NONE --
             </mat-option>
-            <mat-option *ngFor="let product of productDataSource.dataSubject | async" [value]="product.ProductID">
-              {{product.ProductName}}
+            <mat-option *ngFor="let product of productDataSource?.dataSubject | async" [value]="product.ProductID">
+              {{product.ProductName}} ({{product.QuantityPerUnit}})
             </mat-option>
-            <mat-option disabled="true">
-              <span>Registros {{productDataSource.count$ | async}}/{{productDataSource.countTotal$ | async}}</span>
-            </mat-option>
+            <mat-paginator class="mat-paginator-center mat-paginator-fixed-bottom" #productPaginator
+              [pageSizeOptions]="[10, 20]">
+            </mat-paginator>
+
           </mat-select>
         </mat-form-field>
         <br>
-        <!--coountries-->
-        <mat-form-field appearance="fill">
-          <mat-select placeholder="Basic" formControlName="cca3">
-            <mat-select-filter #productFilter formControlName="cca3" [dataSource]="countriesDataSoruce">
+        <!--ODATA + matSelectInfiniteScroll-->
+        <div class="mr-4 text-2xl md:text-3xl font-semibold tracking-tight leading-7">Infinite Scroll</div>
+        <div class="prose prose-sm max-w-3xl">
+          <p>
+            Sample for <code>MatSelectFilter</code> and <code>matSelectInfiniteScroll</code>
+          </p>
+
+        </div>
+
+        <mat-form-field appearance="fill" class="flex flex-row">
+          <mat-select placeholder="Basic" formControlName="productId2" matSelectInfiniteScroll
+            (infiniteScroll)="getNextBatch()" [complete]="(this.productDataSource2.completed$ | async) ?? false">
+            <mat-select-filter #productFilter2 formControlName="productId2" [dataSource]="productDataSource2">
             </mat-select-filter>
-            <mat-option [value]="0">
+            <mat-option disabled="true" [value]="0">
               -- NADA --
+            </mat-option>
+            <mat-option *ngFor="let product of productDataSource2?.dataSubject | async" [value]="product.ProductID">
+              {{product.ProductName}}
+            </mat-option>
+            <mat-option disabled="true">
+              <span>Registros {{productDataSource2?.count$ | async}}/{{productDataSource2?.countTotal$ | async}}</span>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <br />
+
+        <div class="mr-4 text-2xl md:text-3xl font-semibold tracking-tight leading-7">Observable</div>
+        <div class="prose prose-sm max-w-3xl">
+          <p>
+            Sample for <code>MatSelectFilter</code> with <code>Observable</code>
+          </p>
+
+        </div>
+        <mat-form-field appearance="fill">
+          <mat-select placeholder="Basic" formControlName="countryId">
+            <mat-select-filter #countriesFilter formControlName="countryId" [dataSource]="countriesDataSoruce">
+            </mat-select-filter>
+            <mat-option [value]="0" [disabled]="true">
+              -- NONE --
             </mat-option>
             <mat-option *ngFor="let entity of countriesDataSoruce.dataSubject | async" [value]="entity.cca3">
               {{entity.name.common}}

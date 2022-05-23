@@ -14,18 +14,32 @@ import buildQuery, { OrderBy } from 'odata-query';
 import * as _ from 'lodash';
 import { MatSelectFilterDataSource } from './mat-select-filter-datasource';
 import { ODataFilter } from '../odata/models';
+import { MatTableDataSourcePaginator } from '@angular/material/table';
 
 /**
  * Base para origenes de datos O-DATA
  */
 export abstract class MatSelectFilterODataSource<
-  T
+  T,
+  P extends MatTableDataSourcePaginator = MatTableDataSourcePaginator
 > extends MatSelectFilterDataSource<T> {
   // -----------------------------------------------------------------------------------------------------
   // @ Properties
   // -----------------------------------------------------------------------------------------------------
   selectedFields: string | string[] | undefined;
   orderBy: OrderBy<T> | any | undefined;
+
+  protected readonly urlSubject: BehaviorSubject<string>;
+  /**
+   * Url donde se encuentran los recursos
+   */
+  public get url(): string {
+    return this.urlSubject.value;
+  }
+
+  public set url(v: string) {
+    this.urlSubject.next(v);
+  }
 
   protected readonly isEnabledSubject: BehaviorSubject<boolean>;
   public get isEnabled(): boolean {
@@ -34,6 +48,19 @@ export abstract class MatSelectFilterODataSource<
 
   public set isEnabled(v: boolean) {
     this.isEnabledSubject.next(v);
+  }
+
+  protected readonly filtersSubject = new BehaviorSubject<ODataFilter | null>(
+    null
+  );
+  /**
+   * Filtros fijos adicionales a {@link txtFilter}
+   */
+  get filters(): ODataFilter | null {
+    return this.filtersSubject.value;
+  }
+  set filters(filters: ODataFilter | null) {
+    this.filtersSubject.next(filters);
   }
 
   protected readonly pageSubject: BehaviorSubject<number>;
@@ -54,9 +81,41 @@ export abstract class MatSelectFilterODataSource<
     this.pageSizeSubject.next(v);
   }
 
+  /**
+   * Instance of the MatPaginator component used by the table to control what page of the data is
+   * displayed. Page changes emitted by the MatPaginator will trigger an update to the
+   * table's rendered data.
+   *
+   * Note that the data source uses the paginator's properties to calculate which page of data
+   * should be displayed. If the paginator receives its properties as template inputs,
+   * e.g. `[pageLength]=100` or `[pageIndex]=1`, then be sure that the paginator's view has been
+   * initialized before assigning it to this data source.
+   */
+  get paginator(): P | null {
+    return this._paginator;
+  }
+  set paginator(paginator: P | null) {
+    this._paginator = paginator;
+    this.disconnect();
+    this.connect();
+    //this._updateChangeSubscription();
+  }
+  private _paginator: P | null = null;
+
+  /**
+   * Current page count
+   */
   public count$ = new Subject<number>();
+  /**
+   * Total page count
+   */
   public countTotal$ = new Subject<number>();
+  /**
+   * Last page reach
+   */
   public completed$ = new BehaviorSubject<boolean>(false);
+
+  protected subscription: Subscription | undefined;
 
   /**
    * Crea una nueva instancia de la clase ODataDataSource
@@ -80,6 +139,8 @@ export abstract class MatSelectFilterODataSource<
 
     this.txtFilterSubject.subscribe((filter) => {
       this.page = 0;
+
+      if (this._paginator) this._paginator.pageIndex = 0;
     });
   }
 
@@ -101,38 +162,13 @@ export abstract class MatSelectFilterODataSource<
    */
   abstract idFilterMap(id: any): any;
 
-  protected readonly filtersSubject = new BehaviorSubject<ODataFilter[]>([]);
-  /**
-   * Filtros fijos adicionales a {@link idFilter} {@link txtFilter}
-   */
-  get filters(): ODataFilter[] {
-    return this.filtersSubject.value;
-  }
-  set filters(filters: ODataFilter[]) {
-    this.filtersSubject.next(filters);
-  }
-
-  protected readonly urlSubject: BehaviorSubject<string>;
-  /**
-   * Url donde se encuentran los recursos
-   */
-  public get url(): string {
-    return this.urlSubject.value;
-  }
-
-  public set url(v: string) {
-    this.urlSubject.next(v);
-  }
-
-  protected subscription: Subscription | undefined;
-
   // -----------------------------------------------------------------------------------------------------
   // @ ODataSource<T> implementation
   // -----------------------------------------------------------------------------------------------------
   connect(): Observable<any[]> {
     // si la subscripcion no esta creada o esta cerrada
     if (!this.subscription || this.subscription.closed) {
-      this.subscription = this.createObservablePipe().subscribe((result) =>
+      this.subscription = this.getObservable().subscribe((result) =>
         this.dataSubject.next(result)
       );
     }
@@ -146,11 +182,6 @@ export abstract class MatSelectFilterODataSource<
     }
   }
 
-  private createObservablePipe(): Observable<T[]> {
-    const observable = this.getObservable();
-    return observable;
-  }
-
   /**
    * Crea un observable con todos los parametros uqe cambian
    * @returns
@@ -161,17 +192,24 @@ export abstract class MatSelectFilterODataSource<
       this.isEnabledSubject,
       this.filtersSubject,
     ] as Array<ObservableInput<any>>;
-    // LOADING
+
+    let pageToObserve: Observable<any>[] = [];
+
+    if (this._paginator) {
+      pageToObserve = [this._paginator.initialized, this._paginator.page];
+    } else {
+      pageToObserve = [this.pageSubject, this.pageSizeSubject];
+    }
 
     // buscar por TEXTO
     const txt$ = merge(
       ...toObserve,
       this.txtFilterSubject,
       this.idFiltersSubject,
-      this.pageSubject,
-      this.pageSizeSubject
+      ...pageToObserve
     ).pipe(
-      tap(() => this.loadingSubject.next(true)), // el loading esta solo aca por que se dispara con tolo lo que puee cambiar
+      // loading is set to true
+      tap(() => this.loadingSubject.next(true)),
       debounceTime(this.debounceMillis),
       switchMap(() => {
         if (!(this.urlSubject.value && this.isEnabled)) {
@@ -179,21 +217,39 @@ export abstract class MatSelectFilterODataSource<
         }
 
         let filters = this.txtFilterMap(this.txtFilter, this.idFilter);
-        return this.getData(filters, this.page, this.pageSize).pipe(
+        // adtitional filters are set with AND
+        if (this.filtersSubject.value) {
+          filters = {
+            and: [filters, this.filtersSubject.value.getFilter()],
+          };
+        }
+
+        let top = 0;
+        let skip = 0;
+
+        if (this._paginator) {
+          // ifa paginator is defines it uses it
+          skip = this._paginator.pageIndex * this._paginator.pageSize;
+          top = this._paginator.pageSize;
+        } else {
+          // this is when a infinity scroll is defined and additive top is used
+          top = (this.page + 1) * this.pageSize;
+          skip = 0;
+        }
+
+        return this.getData(filters, top, skip).pipe(
           map((data) => {
             this.countTotal$.next(data.count);
             this.count$.next(data.value.length);
             this.completed$.next(data.value.length == data.count);
-
+            this._updatePaginator(data.count);
             return data.value;
           })
         );
-
-        //return this.getData(filters, this.page, this.pageSize);
       })
     );
 
-    // buscar por ID
+    // serach by ID
     const id$ = merge(...toObserve, this.idFiltersSubject).pipe(
       debounceTime(this.debounceMillis),
       switchMap(() => {
@@ -208,7 +264,7 @@ export abstract class MatSelectFilterODataSource<
         }
 
         let filters = this.idFilterMap(this.idFilter);
-        return this.getData(filters, this.page, this.pageSize).pipe(
+        return this.getData(filters, 0, 0).pipe(
           map((data) => {
             return data.value;
           })
@@ -225,6 +281,7 @@ export abstract class MatSelectFilterODataSource<
         const data = [...(idResults || []), ...(txtResults || [])];
         return data;
       }),
+      // loading is set to false
       tap(() => this.loadingSubject.next(false))
     );
   }
@@ -257,8 +314,8 @@ export abstract class MatSelectFilterODataSource<
 
   protected getData(
     filters: any,
-    pages?: number,
-    pageSize?: number
+    top?: number,
+    skip?: number
   ): Observable<{
     count: number;
     value: T[];
@@ -268,8 +325,9 @@ export abstract class MatSelectFilterODataSource<
     if (this.selectedFields) query.select = this.selectedFields;
 
     if (this.orderBy) query.orderBy = this.orderBy;
-    if (pages || pageSize) {
-      query.top = (pageSize ?? 0) * ((pages ?? 0) + 1);
+    if (top || skip) {
+      query.top = top;
+      query.skip = skip;
       query.count = true;
     }
 
@@ -289,5 +347,37 @@ export abstract class MatSelectFilterODataSource<
     return this.httpClient
       .get(url)
       .pipe(map((data) => this._mapODataResults(data)));
+  }
+
+  /**
+   * Updates the paginator to reflect the length of the filtered data, and makes sure that the page
+   * index does not exceed the paginator's last page. Values are changed in a resolved promise to
+   * guard against making property changes within a round of change detection.
+   */
+  protected _updatePaginator(filteredDataLength: number) {
+    Promise.resolve().then(() => {
+      const paginator = this.paginator;
+
+      if (!paginator) {
+        return;
+      }
+
+      paginator.length = filteredDataLength;
+
+      // If the page index is set beyond the page, reduce it to the last page.
+      if (paginator.pageIndex > 0) {
+        const lastPageIndex =
+          Math.ceil(paginator.length / paginator.pageSize) - 1 || 0;
+        const newPageIndex = Math.min(paginator.pageIndex, lastPageIndex);
+
+        if (newPageIndex !== paginator.pageIndex) {
+          paginator.pageIndex = newPageIndex;
+
+          // Since the paginator only emits after user-generated changes,
+          // we need our own stream so we know to should re-render the data.
+          //this._internalPageChanges.next();
+        }
+      }
+    });
   }
 }
