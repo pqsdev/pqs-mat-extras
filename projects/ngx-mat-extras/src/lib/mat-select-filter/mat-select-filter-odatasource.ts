@@ -31,7 +31,7 @@ export abstract class MatSelectFilterODataSource<
 
   protected readonly urlSubject: BehaviorSubject<string>;
   /**
-   * Url donde se encuentran los recursos
+   * Resource location URL
    */
   public get url(): string {
     return this.urlSubject.value;
@@ -42,6 +42,9 @@ export abstract class MatSelectFilterODataSource<
   }
 
   protected readonly isEnabledSubject: BehaviorSubject<boolean>;
+  /**
+   * if @constant false no search will be performed until @constant true
+   */
   public get isEnabled(): boolean {
     return this.isEnabledSubject.value;
   }
@@ -54,7 +57,7 @@ export abstract class MatSelectFilterODataSource<
     null
   );
   /**
-   * Filtros fijos adicionales a {@link txtFilter}
+   * Aditional filters {@link txtFilter}
    */
   get filters(): ODataFilter | null {
     return this.filtersSubject.value;
@@ -64,6 +67,9 @@ export abstract class MatSelectFilterODataSource<
   }
 
   protected readonly pageSubject: BehaviorSubject<number>;
+  /**
+   * Incremental page number, ignored if {@link paginator}  is set.
+   */
   public get page(): number {
     return this.pageSubject.value;
   }
@@ -71,8 +77,13 @@ export abstract class MatSelectFilterODataSource<
   public set page(v: number) {
     this.pageSubject.next(v);
   }
-
+  /**
+   * Incremental page size, ignored if {@link paginator}  is set .
+   */
   protected readonly pageSizeSubject: BehaviorSubject<number>;
+  /**
+   *
+   */
   public get pageSize(): number {
     return this.pageSizeSubject.value;
   }

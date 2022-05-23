@@ -43,7 +43,7 @@ Abstract data data source for `mat-select-filter`. Implement it for custom data 
 | `errors`               | Emits value if there is an error                                     | `Observable<any>`             |             |
 | `selectedValueChanged` | Emits a value with the object associated with the selected key value | `Observable< T \| undefined>` |             |
 
-`setSelectedData`abstract method must be overrides in the implementations. The main goals is to emmit a value with `selectedDataSubject$`
+`setSelectedData`abstract method must be overrides in the implementations. The main goals is to emit a value with `selectedDataSubject$`
 
 #### Selected Key != Selected Value
 
@@ -53,7 +53,25 @@ Example SelectedKey = 32 Selected value = `{ProductID: 32, ProductName: 'Noodles
 
 ### MatSelectFilterODataSource
 
-Abstract ODATA data source for `mat-select-filter` . Implement it for custom filtering.
+Abstract ODATA data source for `mat-select-filter` . Implement it for custom filtering. See examples for interaction with `mat-paginator` and `matSelectInfiniteScroll`
+
+
+
+| Properties    | Description                                                                                 | Type                                  | Default |
+| ------------- | ------------------------------------------------------------------------------------------- | ------------------------------------- | ------- |
+| `url`         | Resource location URL                                                                       | `string`                              | `''`    |
+| `isEnabled`   | When `false` the data source will not trigger new `HTTP GET` to the resource URL            | `boolean`                             | `true`  |
+| `filters`     | Aditional filters, the interface `IODataFilter` allows to implement custom logic in filters | `IODataFilter \| null`                | `null`  |
+| `page`        | Incremental page number, ignored if `paginator` is set.                                     | `number`                              | `0`     |
+| `pageSize`    | Incremental page size, ignored if `paginator` is set .                                      | `number`                              | `0`     |
+| `paginator`   | Paginator (reused from `@angular/material`) for paging inside the `mat-select`              | `MatTableDataSourcePaginator \| null` | null    |
+| `count$`      | Total item being listed  (Useful for incremental paging)                                    | `Subject<number>`                     |         |
+| `countTotal$` | Total count of items  (Useful for incremental paging)                                       | `Subject<number>`                     |         |
+| `completed$`  | No more item to list (Useful for incremental paging)                                        | `BehaviorSubject<boolean>`            | `false` |
+
+(**)**NESTED OBJECTS PROPERTIES ARE NOT SUPPORTED
+
+
 
 ### MatSelectFilterFastODataSource
 
@@ -61,10 +79,10 @@ Simple implementation of `MatSelectFilterODataSource`.
 
 Constructor
 
-| Parameter        | Description                                                          | Type     | Default |
-| ---------------- | -------------------------------------------------------------------- | -------- | ------- |
-| `filterProperty` | The data source will filter the input text with this property.  (**) | `string` |         |
-| `keyProperty`    | Used to set the value of the control.                                | `string` |         |
+| Parameter        | Description                                                          | Type                   | Default |
+| ---------------- | -------------------------------------------------------------------- | ---------------------- | ------- |
+| `filterProperty` | The data source will filter the input text with this property.  (**) | `string` \| `string[]` |         |
+| `keyProperty`    | Used to set the value of the control.                                | `string`               |         |
 
 (**)**NESTED OBJECTS PROPERTIES ARE NOT SUPPORTED**
 
