@@ -26,7 +26,7 @@ export type URLParamsType =
 /**
  * ODATA Data Sorurce of Angular CDK @type { DataSource }
  */
-export class ODataDataSource extends DataSource<any> {
+export class ODataDataSource<T = any> extends DataSource<T> {
   sort: MatSort | undefined;
   paginator: MatPaginator | undefined;
   selectedFields: string[] = [];
@@ -40,9 +40,8 @@ export class ODataDataSource extends DataSource<any> {
   );
 
   protected subscription: Subscription | undefined;
-  public readonly dataSubject: BehaviorSubject<any[]> = new BehaviorSubject<
-    any[]
-  >([]);
+  public readonly dataSubject: BehaviorSubject<T[] | any[]> =
+    new BehaviorSubject<T[] | any[]>([]);
   protected readonly loadingSubject: BehaviorSubject<boolean> =
     new BehaviorSubject<boolean>(false);
   protected readonly errorSubject: BehaviorSubject<any> =
@@ -149,7 +148,7 @@ export class ODataDataSource extends DataSource<any> {
    * values that are bound in template views.
    * @returns Observable that emits a new value when the data changes.
    */
-  connect(): Observable<any[]> {
+  connect(): Observable<T[] | any[]> {
     if (!this.subscription || this.subscription.closed) {
       this.subscription = this.createObservablePipe().subscribe((result) =>
         this.dataSubject.next(result)
@@ -171,7 +170,7 @@ export class ODataDataSource extends DataSource<any> {
   }
 
   /** Gets the las data returned  by de odata query*/
-  get data(): any[] {
+  get data(): T[] | any[] {
     return this.dataSubject.value;
   }
 
