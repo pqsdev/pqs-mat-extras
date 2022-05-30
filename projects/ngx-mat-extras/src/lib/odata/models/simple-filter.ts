@@ -1,5 +1,8 @@
 import { ODataFilter } from './odata-filter';
-
+/**
+ * BUILT-IN {@type ODataFilter} implementation eq filter
+ * {@deprecated will be eliminated in version 14 use ODataContainsFilter instead}
+ */
 export class SimpleFilter implements ODataFilter {
   filter_expression: any;
 

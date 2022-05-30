@@ -1,25 +1,39 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { debounceTime } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { debounceTime, distinct, takeUntil } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
-import { ODataDataSource } from 'projects/ngx-mat-extras/src/public-api';
+import {
+  ODataContainsFilter,
+  ODataDataSource,
+  ODataEqFilter,
+} from 'projects/ngx-mat-extras/src/public-api';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { ODataFilter } from 'dist/ngx-mat-extras/public-api';
 
 @Component({
   selector: 'app-odata-source',
   templateUrl: './odata-source.component.html',
   styleUrls: ['./odata-source.component.scss'],
 })
-export class OdataSourceComponent implements OnInit, AfterViewInit {
+export class OdataSourceComponent implements OnInit, OnDestroy, AfterViewInit {
+  /** Subject that emits when the component has been destroyed. */
+  private _onDestroy = new Subject<void>();
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<any>;
   loading$: Observable<boolean>;
-
-  title = 'odata-data-source-demo';
+  searchForm: FormGroup;
   // mat - table colums to display
   displayedColumns: string[] = [
     'CustomerName',
@@ -35,14 +49,47 @@ export class OdataSourceComponent implements OnInit, AfterViewInit {
 
   dataSource: ODataDataSource;
 
-  constructor(private readonly httpClient: HttpClient) {
+  constructor(fb: FormBuilder, private readonly httpClient: HttpClient) {
     // datasource creation, the URL is left blank for testing pourposes but can be specified
     this.dataSource = new ODataDataSource(this.httpClient, '', 10);
     // debounce in loading to avoid showing it when tere is little delay
     this.loading$ = this.dataSource.loading.pipe(debounceTime(200));
+    this.searchForm = fb.group({
+      filter: '',
+    });
+  }
+  // -----------------------------------------------------------------------------------------------------
+  // @ Private methods
+  // -----------------------------------------------------------------------------------------------------
+  /**
+   * Dinamic filter generation
+   */
+  private refreshList(searchTerm: any) {
+    if (isNaN(searchTerm)) {
+      let odataFilter = new ODataContainsFilter([
+        'ProductName',
+        'CustomerName',
+        'Salesperson',
+      ]);
+      odataFilter.filter_expression = searchTerm;
+      this.dataSource.filters = [odataFilter];
+    } else {
+      let odataFilter = new ODataEqFilter(['ProductID', 'OrderID']);
+      odataFilter.filter_expression = +searchTerm;
+      this.dataSource.filters = [odataFilter];
+    }
+
+    this.paginator.firstPage();
   }
 
-  ngOnInit() {}
+  // -----------------------------------------------------------------------------------------------------
+  // @ Lifecycle hooks
+  // -----------------------------------------------------------------------------------------------------
+  ngOnInit() {
+    this.searchForm.valueChanges
+      .pipe(takeUntil(this._onDestroy), distinct(), debounceTime(500))
+      .subscribe((value) => this.refreshList(value.filter));
+  }
 
   ngAfterViewInit() {
     // DataSource sort and paginator must be configured in ngAfterViewInit
@@ -54,5 +101,10 @@ export class OdataSourceComponent implements OnInit, AfterViewInit {
       'https://services.odata.org/Experimental/Northwind/Northwind.svc/Invoices';
 
     this.table.dataSource = this.dataSource;
+  }
+
+  ngOnDestroy(): void {
+    this._onDestroy.next();
+    this._onDestroy.complete();
   }
 }
