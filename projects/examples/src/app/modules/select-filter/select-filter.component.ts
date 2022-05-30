@@ -73,7 +73,7 @@ export class SelectFilterComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
   public getNextBatch() {
-    this.productDataSource.page++;
+    this.productDataSource2.page++;
   }
   // -----------------------------------------------------------------------------------------------------
   // @ Lifecycle hooks
