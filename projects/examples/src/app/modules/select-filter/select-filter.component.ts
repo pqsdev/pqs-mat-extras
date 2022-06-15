@@ -44,7 +44,7 @@ export class SelectFilterComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.productDataSource = new MatSelectFilterFastODataSource<any>(
       this.httpClient,
-      'https://services.odata.org/Experimental/Northwind/Northwind.svc/Products',
+      'https://services.odata.org/Experimental/Northwind/Northwind.svc/Products?$expand=Category',
       0,
       true,
       ['ProductName', 'QuantityPerUnit'],
@@ -59,6 +59,8 @@ export class SelectFilterComponent implements OnInit, AfterViewInit, OnDestroy {
       ['ProductName', 'QuantityPerUnit'],
       'ProductID'
     );
+
+    this.productDataSource2.expand = ['Category', 'Supplier'];
 
     this.countriesDataSoruce = new MatSelectFilterObservableDataSource<any>(
       this.httpClient.get<any>('https://restcountries.com/v3.1/all'),

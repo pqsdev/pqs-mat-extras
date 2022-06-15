@@ -15,6 +15,7 @@ import * as _ from 'lodash';
 import { MatSelectFilterDataSource } from './mat-select-filter-datasource';
 import { ODataFilter } from '../odata/models';
 import { MatTableDataSourcePaginator } from '@angular/material/table';
+import { T } from '@angular/cdk/keycodes';
 
 /**
  * Base para origenes de datos O-DATA
@@ -114,6 +115,17 @@ export abstract class MatSelectFilterODataSource<
   private _paginator: P | null = null;
 
   /**
+   * Expanded properties
+   */
+  private expandSubject: BehaviorSubject<string[]>;
+
+  get expand(): string[] {
+    return this.expandSubject.value;
+  }
+  set expand(value: string[]) {
+    this.expandSubject.next(value);
+  }
+  /**
    * Current page count
    */
   public count$ = new Subject<number>();
@@ -146,6 +158,7 @@ export abstract class MatSelectFilterODataSource<
     this.urlSubject = new BehaviorSubject<string>(initUrl);
     this.isEnabledSubject = new BehaviorSubject<boolean>(isEnabled);
     this.pageSubject = new BehaviorSubject<number>(0);
+    this.expandSubject = new BehaviorSubject<string[]>([]);
     this.pageSizeSubject = new BehaviorSubject<number>(pageSize);
 
     this.txtFilterSubject.subscribe((filter) => {
@@ -202,6 +215,7 @@ export abstract class MatSelectFilterODataSource<
       this.urlSubject,
       this.isEnabledSubject,
       this.filtersSubject,
+      this.expandSubject,
     ] as Array<ObservableInput<any>>;
 
     let pageToObserve: Observable<any>[] = [];
@@ -248,7 +262,7 @@ export abstract class MatSelectFilterODataSource<
           skip = 0;
         }
 
-        return this.getData(filters, top, skip).pipe(
+        return this.getData(filters, this.expand, top, skip).pipe(
           map((data) => {
             this.countTotal$.next(data.count);
             this.count$.next(data.value.length);
@@ -275,7 +289,7 @@ export abstract class MatSelectFilterODataSource<
         }
 
         let filters = this.idFilterMap(this.idFilter);
-        return this.getData(filters, 0, 0).pipe(
+        return this.getData(filters, this.expand, 0, 0).pipe(
           map((data) => {
             return data.value;
           })
@@ -325,6 +339,7 @@ export abstract class MatSelectFilterODataSource<
 
   protected getData(
     filters: any,
+    expand: string[],
     top?: number,
     skip?: number
   ): Observable<{
@@ -341,6 +356,7 @@ export abstract class MatSelectFilterODataSource<
       query.skip = skip;
       query.count = true;
     }
+    if (expand.length) query.expand = expand;
 
     if (filters) {
       if (Array.isArray(filters)) {
@@ -353,7 +369,12 @@ export abstract class MatSelectFilterODataSource<
         query.filter = filterQuery;
       } else query.filter = filters;
     }
-    let url = this.url + buildQuery(query);
+    let queryUrl = buildQuery(query);
+
+    let url = '';
+    if (this.url.includes('?'))
+      url = this.url + '&' + queryUrl.substring(1, queryUrl.length);
+    else url = this.url + queryUrl;
 
     return this.httpClient
       .get(url)
