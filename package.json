@@ -10,8 +10,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve examples",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
+    "build": "ng build ngx-mat-extras",
+    "watch": "ng build ngx-mat-extras --watch --configuration development",
     "test": "ng test",
     "npm_pack": "cd dist/ngx-mat-extras && npm pack",
     "package": "npm run build && npm run npm_pack"
