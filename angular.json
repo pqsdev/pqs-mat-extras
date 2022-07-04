@@ -138,5 +138,7 @@
       }
     }
   },
-  "defaultProject": "ngx-mat-extras"
+  "cli": {
+    "analytics": false
+  }
 }
