@@ -17,7 +17,7 @@ import {
   ODataDataSource,
   ODataEqFilter,
 } from 'projects/ngx-mat-extras/src/public-api';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ODataFilter } from 'dist/ngx-mat-extras/public-api';
 
 @Component({
@@ -33,7 +33,7 @@ export class OdataSourceComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<any>;
   loading$: Observable<boolean>;
-  searchForm: FormGroup;
+  searchForm: UntypedFormGroup;
   // mat - table colums to display
   displayedColumns: string[] = [
     'CustomerName',
@@ -49,7 +49,7 @@ export class OdataSourceComponent implements OnInit, OnDestroy, AfterViewInit {
 
   dataSource: ODataDataSource;
 
-  constructor(fb: FormBuilder, private readonly httpClient: HttpClient) {
+  constructor(fb: UntypedFormBuilder, private readonly httpClient: HttpClient) {
     // datasource creation, the URL is left blank for testing pourposes but can be specified
     this.dataSource = new ODataDataSource(this.httpClient, '', 10);
     // debounce in loading to avoid showing it when tere is little delay

@@ -6,7 +6,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import {
   MatSelectFilterComponent,
@@ -23,7 +23,7 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class SelectFilterComponent implements OnInit, AfterViewInit, OnDestroy {
   private _onDestroy = new Subject<void>();
-  theForm: FormGroup;
+  theForm: UntypedFormGroup;
 
   @ViewChild('productFilter') productFiler!: MatSelectFilterComponent<any>;
   @ViewChild('productPaginator') productPaginator!: MatPaginator;
@@ -35,7 +35,7 @@ export class SelectFilterComponent implements OnInit, AfterViewInit, OnDestroy {
 
   //url: 'https://services.odata.org/Experimental/Northwind/Northwind.svc/Categories'}
 
-  constructor(private readonly httpClient: HttpClient, fb: FormBuilder) {
+  constructor(private readonly httpClient: HttpClient, fb: UntypedFormBuilder) {
     this.theForm = fb.group({
       productId1: 17,
       productId2: 18,

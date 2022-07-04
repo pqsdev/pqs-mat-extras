@@ -6,8 +6,8 @@ import {
   AfterContentChecked,
 } from '@angular/core';
 import {
-  FormGroup,
-  FormBuilder,
+  UntypedFormGroup,
+  UntypedFormBuilder,
   NG_VALUE_ACCESSOR,
   ControlContainer,
   ControlValueAccessor,
@@ -92,9 +92,9 @@ export class MatSelectFilterComponent<T>
    */
   public filteredItems$ = new BehaviorSubject<T[]>([]);
 
-  public searchForm: FormGroup;
+  public searchForm: UntypedFormGroup;
 
-  constructor(fb: FormBuilder, private controlContainer: ControlContainer) {
+  constructor(fb: UntypedFormBuilder, private controlContainer: ControlContainer) {
     this.searchForm = fb.group({
       value: '',
     });
