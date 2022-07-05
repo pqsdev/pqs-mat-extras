@@ -21,9 +21,9 @@
     "directive"
   ],
   "peerDependencies": {
-    "@angular/common": ">=6.0.0 <14.0.0",
-    "@angular/core": ">=6.0.0 <14.0.0",
-    "@angular/material": ">=6.0.0 <14.0.0",
+    "@angular/common": ">=6.0.0 <=14.99.0",
+    "@angular/core": ">=6.0.0 <=14.99.0",
+    "@angular/material": ">=6.0.0 <=14.99.0",
     "lodash-es": "4",
     "odata-query": "6"
   },
