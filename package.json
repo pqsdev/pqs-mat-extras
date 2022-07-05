@@ -1,6 +1,6 @@
 {
   "name": "@pqsdev/ngx-mat-extras",
-  "version": "14.0.4-alpha",
+  "version": "14.0.5-alpha",
   "description": "Adds extra functionality to angular material. ALPHA VERSION DO NOT USE",
   "repository": {
     "type": "git",
