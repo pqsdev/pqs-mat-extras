@@ -18,7 +18,6 @@ import {
   ODataEqFilter,
 } from 'projects/ngx-mat-extras/src/public-api';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { ODataFilter } from 'dist/ngx-mat-extras/public-api';
 
 @Component({
   selector: 'app-odata-source',
