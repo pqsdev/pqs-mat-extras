@@ -1,6 +1,6 @@
 {
   "name": "@pqsdev/ngx-mat-extras",
-  "version": "14.0.5-alpha",
+  "version": "114.2.12-alpha",
   "description": "Adds extra functionality to angular material. ALPHA VERSION DO NOT USE",
   "repository": {
     "type": "git",
@@ -25,7 +25,7 @@
     "@angular/core": ">=6.0.0 <=14.99.0",
     "@angular/material": ">=6.0.0 <=14.99.0",
     "lodash-es": "4",
-    "odata-query": "6"
+    "odata-query": "4"
   },
   "dependencies": {
     "tslib": "^2.3.0"
