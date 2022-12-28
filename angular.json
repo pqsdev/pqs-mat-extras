@@ -13,6 +13,7 @@
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "project": "projects/ngx-mat-extras/ng-package.json"
+
           },
           "configurations": {
             "production": {
@@ -63,6 +64,9 @@
             ],
             "styles": [
               "projects/examples/src/styles.scss"
+            ],
+            "allowedCommonJsDependencies": [
+              "lodash"
             ],
             "scripts": []
           },
