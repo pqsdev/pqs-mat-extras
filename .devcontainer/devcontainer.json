@@ -10,14 +10,19 @@
             "version": "latest"
         }
     },
-    "extensions": [
-        "eamodio.gitlens",
-        "angular.ng-template",
-        "dbaeumer.vscode-eslint",
-        "EditorConfig.EditorConfig",
-        "esbenp.prettier-vscode",
-        "johnpapa.Angular2"
-    ],
+    "customizations": {
+      "vscode": {
+        "extensions": [
+                "eamodio.gitlens",
+                "angular.ng-template",
+                "dbaeumer.vscode-eslint",
+                "EditorConfig.EditorConfig",
+                "esbenp.prettier-vscode",
+                "johnpapa.Angular2"
+            ]
+      }
+    },
+
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
     "forwardPorts": [
         4200
