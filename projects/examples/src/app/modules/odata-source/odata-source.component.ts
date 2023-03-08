@@ -57,6 +57,12 @@ export class OdataSourceComponent implements OnInit, OnDestroy, AfterViewInit {
       filter: '',
     });
   }
+
+  public clear():void{
+    if(this.dataSource)
+      this.dataSource.clear();
+  }
+
   // -----------------------------------------------------------------------------------------------------
   // @ Private methods
   // -----------------------------------------------------------------------------------------------------
