@@ -11,6 +11,8 @@ import { MatLegacyTableModule as MatTableModule } from '@angular/material/legacy
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
 import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [OdataSourceComponent],
@@ -25,7 +27,8 @@ import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatInputModule,
-
+    MatIconModule,
+    MatTooltipModule,
     OdataSourceRoutingModule,
   ],
 })

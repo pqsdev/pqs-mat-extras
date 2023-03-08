@@ -169,6 +169,16 @@ export class ODataDataSource<T = any> extends DataSource<T> {
     }
   }
 
+  /**
+   * Clear results
+   * @returns void
+   */
+  clear(): void {
+    if (this.paginator) this.paginator.length = 0;
+
+    return this.dataSubject.next([]);
+  }
+
   /** Gets the las data returned  by de odata query*/
   get data(): T[] | any[] {
     return this.dataSubject.value;
