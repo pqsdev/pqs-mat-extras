@@ -7,7 +7,8 @@ import {
 } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { DOCUMENT } from '@angular/common';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { FormControl, FormGroup  } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -16,9 +17,13 @@ import { BehaviorSubject, Subject } from 'rxjs';
 })
 export class AppComponent implements OnInit, OnDestroy {
   mobileQuery: MediaQueryList;
-
+  private _onDestroy = new Subject<void>();
   fillerNav = Array.from({ length: 50 }, (_, i) => `Nav Item ${i + 1}`);
   isDarkTheme$: BehaviorSubject<boolean>;
+
+  themeForm = new FormGroup({
+    theme: new FormControl('theme-default', { nonNullable: true }),
+  });
 
   private _mobileQueryListener: () => void;
 
@@ -35,9 +40,29 @@ export class AppComponent implements OnInit, OnDestroy {
       media.matchMedia('(prefers-color-scheme: dark)').matches
     );
 
-    this.isDarkTheme$.subscribe((value) => {
-      this._document.body.classList.remove('light', 'dark');
-      this._document.body.classList.add(value ? 'dark' : 'ligth');
+    this.themeForm.valueChanges
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe((val) => {
+        this._document.body.classList.remove(
+          'theme-pink',
+          'theme-default'
+        );
+        this._document.body.classList.add(val.theme);
+      });
+
+    this.isDarkTheme$.pipe(takeUntil(this._onDestroy)).subscribe((value) => {
+      this._document.body.classList.remove(
+        'light',
+        'dark'
+      );
+
+      if (value) {
+
+        this._document.body.classList.add('dark');
+      } else {
+
+        this._document.body.classList.add('light');
+      }
     });
   }
 
@@ -65,6 +90,8 @@ export class AppComponent implements OnInit, OnDestroy {
    */
   ngOnInit() {}
   ngOnDestroy(): void {
+    this._onDestroy.next();
+    this._onDestroy.complete();
     this.mobileQuery.removeEventListener('change', this._mobileQueryListener);
   }
 }

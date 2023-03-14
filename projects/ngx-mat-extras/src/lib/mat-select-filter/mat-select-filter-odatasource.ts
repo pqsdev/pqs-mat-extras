@@ -14,7 +14,7 @@ import buildQuery, { OrderBy } from 'odata-query';
 import * as _ from 'lodash';
 import { MatSelectFilterDataSource } from './mat-select-filter-datasource';
 import { ODataFilter } from '../odata/models';
-import { MatLegacyTableDataSourcePaginator as MatTableDataSourcePaginator } from '@angular/material/legacy-table';
+import { MatTableDataSourcePaginator } from '@angular/material/table';
 import { T } from '@angular/cdk/keycodes';
 
 /**

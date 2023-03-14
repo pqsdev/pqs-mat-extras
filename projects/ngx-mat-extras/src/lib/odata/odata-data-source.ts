@@ -11,7 +11,7 @@ import {
 } from 'rxjs';
 import { switchMap, tap, map, catchError, debounceTime } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { ODataFilter } from './models/odata-filter';
 import buildQuery from 'odata-query';
 /**

@@ -8,7 +8,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { MatLegacySelect as MatSelect } from '@angular/material/legacy-select';
+import { MatSelect } from '@angular/material/select';
 import { debounceTime, fromEvent, Subject, takeUntil, tap } from 'rxjs';
 
 /** The height of the select items in `em` units. */
