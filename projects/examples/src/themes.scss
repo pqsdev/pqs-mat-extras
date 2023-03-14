@@ -1,0 +1,9 @@
+@use '@angular/material' as mat;
+@use "sass:map";
+
+$user-themes: (
+  default: (selector: ".theme-default", primary: mat.$indigo-palette, accent:mat.$pink-palette, warn:mat.$red-palette),
+  pink: (selector: ".theme-pink", primary: mat.$pink-palette, accent:mat.$blue-gray-palette, warn:mat.$red-palette),
+);
+
+

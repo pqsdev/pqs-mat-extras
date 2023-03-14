@@ -6,19 +6,18 @@
       <div class="flex flex-col h-full">
         <mat-nav-list>
           <mat-list-item>
-            <mat-icon svgIcon="fas:home"></mat-icon>
+            <mat-icon matListItemIcon svgIcon="fas:home"></mat-icon>
             <a mat-list-item routerLink="">HOME</a>
           </mat-list-item>
           <mat-list-item>
-            <mat-icon svgIcon="storage"></mat-icon>
+            <mat-icon matListItemIcon svgIcon="storage"></mat-icon>
             <a mat-list-item routerLink="odata-source">ODATA DATASOURCE</a>
           </mat-list-item>
 
           <mat-list-item>
-            <mat-icon svgIcon="feather:credit-card"></mat-icon>
+            <mat-icon matListItemIcon svgIcon="feather:credit-card"></mat-icon>
             <a mat-list-item routerLink="select-filter">MAT-SELECT</a>
           </mat-list-item>
-
         </mat-nav-list>
         <div class="flex-1"></div>
         <span>PQS {{currentYear}}</span>
@@ -33,6 +32,16 @@
         </button>
         <h1 class="example-app-name">PQS MAT EXTAS SAMPLES</h1>
         <span class="flex-1"></span>
+        <form class="flex-auto" [formGroup]="themeForm">
+          <mat-select formControlName="theme">
+            <mat-option value="theme-default" >
+              DEFAULT
+            </mat-option>
+            <mat-option value="theme-pink">
+              PINK
+            </mat-option>
+          </mat-select>
+        </form>
         <button *ngIf="!(isDarkTheme$  | async)" mat-icon-button aria-label="Enable dark theme" (click)="toggleScheme()"
           matTooltip="Go to The Dark Side of the Force">
           <mat-icon svgIcon="sw:vader"></mat-icon>
