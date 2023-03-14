@@ -1,5 +1,5 @@
 @use '@angular/material' as mat;
-@use "themes" as userThemes;
+@use "styles/themes" as userThemes;
 @use "sass:map";
 
 $light-base: (
@@ -200,6 +200,8 @@ body {
   }
 }
 
+
+@import "styles/input-time";
 
 @import "tailwindcss/base";
 @import "tailwindcss/components";

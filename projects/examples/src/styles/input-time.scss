@@ -1,0 +1,74 @@
+// CUSTOM STYLE FOR  input[type=time] ELEMENT
+input[type=time].clear {
+  all: unset;
+}
+
+input[type=time].custom {
+  border: none;
+  color: #ffffff;
+  background-color: transparent;
+  width:180px;
+  &::-webkit-calendar-picker-indicator {
+      display: block;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' ><text x='1' y='24' fill='red' style='font-size:24px'>🕒</text></svg>");
+      position: absolute;
+      right: 2px;
+      top: 16px;
+      width: 32px;
+      height: 32px;
+    }
+
+  /* Wrapper around the hour, minute, second, and am/pm fields as well as
+  the up and down buttons and the 'X' button */
+  &::-webkit-datetime-edit-fields-wrapper {
+    display: flex;
+  }
+
+  /* The space between the fields - between hour and minute, the minute and
+    second, second and am/pm */
+  &::-webkit-datetime-edit-text {
+    padding: 2px ;
+  }
+
+  /* The naming convention for the hour, minute, second, and am/pm field is
+    `-webkit-datetime-edit-{field}-field` */
+
+  /* Hour */
+  &::-webkit-datetime-edit-hour-field {
+
+    border-radius: 5%;
+    padding: 3px 3px;
+  }
+
+  /* Minute */
+  &::-webkit-datetime-edit-minute-field {
+
+    border-radius: 5%;
+    padding: 3px 3px;
+  }
+
+  /* Second */
+  &::-webkit-datetime-edit-second-field {
+
+    border-radius: 15%;
+    padding: 3px 3px;
+  }
+
+  /* AM/PM */
+  &::-webkit-datetime-edit-ampm-field {
+    background-color: #7155d3;
+    border-radius: 15%;
+    color: #fff;
+    padding: 3px 3px;
+  }
+
+  /* 'X' button for resetting/clearing time */
+  &::-webkit-clear-button {
+    display: none;
+  }
+
+  /* Up/Down arrows for incrementing/decrementing the value */
+  &::-webkit-inner-spin-button {
+    display:none;
+  }
+}
