@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { OdataSourceRoutingModule } from './odata-source-routing.module';
 import { OdataSourceComponent } from './odata-source.component';
 import { HttpClientModule } from '@angular/common/http';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatLuxonDateModule } from '@angular/material-luxon-adapter';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSortModule } from '@angular/material/sort';
@@ -21,6 +23,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    MatDatepickerModule,
+    MatLuxonDateModule,
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,

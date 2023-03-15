@@ -13,11 +13,20 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
 import {
+  ODataComplexFilter,
   ODataContainsFilter,
   ODataDataSource,
   ODataEqFilter,
+  ODataFilter,
 } from 'projects/ngx-mat-extras/src/public-api';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { FormControl, FormGroup, FormBuilder } from '@angular/forms';
+import { DateTime } from 'luxon';
+
+interface ISearchForm {
+  filter?: FormControl<string | undefined>;
+  shippedDate?: FormControl<DateTime | null | undefined>;
+  shippedTime: FormControl<string | undefined>;
+}
 
 @Component({
   selector: 'app-odata-source',
@@ -32,7 +41,12 @@ export class OdataSourceComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<any>;
   loading$: Observable<boolean>;
-  searchForm: UntypedFormGroup;
+
+  searchForm = new FormGroup({
+    filter: new FormControl('', { nonNullable: true }),
+    shippedDate: new FormControl<DateTime | null>(null),
+    shippedTime: new FormControl('', { nonNullable: true }),
+  });
   // mat - table colums to display
   displayedColumns: string[] = [
     'CustomerName',
@@ -40,6 +54,7 @@ export class OdataSourceComponent implements OnInit, OnDestroy, AfterViewInit {
     'ProductID',
     'ProductName',
     'Salesperson',
+    'ShippedDate',
     'ShipperName',
     'Discount',
     'Quantity',
@@ -48,14 +63,11 @@ export class OdataSourceComponent implements OnInit, OnDestroy, AfterViewInit {
 
   dataSource: ODataDataSource;
 
-  constructor(fb: UntypedFormBuilder, private readonly httpClient: HttpClient) {
+  constructor(private readonly httpClient: HttpClient) {
     // datasource creation, the URL is left blank for testing pourposes but can be specified
     this.dataSource = new ODataDataSource(this.httpClient, '', 10);
     // debounce in loading to avoid showing it when tere is little delay
     this.loading$ = this.dataSource.loading.pipe(debounceTime(200));
-    this.searchForm = fb.group({
-      filter: '',
-    });
   }
 
   public clear(): void {
@@ -68,21 +80,46 @@ export class OdataSourceComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Dinamic filter generation
    */
-  private refreshList(searchTerm: any) {
-    if (isNaN(searchTerm)) {
+  private refreshList(
+    filters: Partial<{
+      filter: string;
+      shippedDate: DateTime | null;
+      shippedTime: string;
+    }>
+  ) {
+    let searchTerm = filters.filter || '';
+    let odata_filters: ODataFilter[] = [];
+    if (isNaN(+searchTerm)) {
       let odataFilter = new ODataContainsFilter([
         'ProductName',
         'CustomerName',
         'Salesperson',
       ]);
-      odataFilter.filter_expression = searchTerm;
-      this.dataSource.filters = [odataFilter];
+      odataFilter.filter_expression = searchTerm.toString();
+      odata_filters.push(odataFilter);
     } else {
       let odataFilter = new ODataEqFilter(['ProductID', 'OrderID']);
       odataFilter.filter_expression = +searchTerm;
-      this.dataSource.filters = [odataFilter];
+      odata_filters.push(odataFilter);
     }
 
+    if (DateTime.isDateTime(filters.shippedDate)) {
+      let date = filters.shippedDate as DateTime;
+      let filterDate = DateTime.fromFormat(
+        date.toFormat('yyyy-MM-dd') + ' ' + filters.shippedTime,
+        'yyyy-MM-dd hh:mm:ss'
+      );
+      let odataFilter = new ODataComplexFilter({
+        ShippedDate: {
+          gt: filterDate.isValid
+            ? filterDate.toJSDate()
+            : filters.shippedDate.toJSDate(),
+        },
+      });
+      odata_filters.push(odataFilter);
+    }
+
+    this.dataSource.filters = odata_filters;
     this.paginator.firstPage();
   }
 
@@ -92,7 +129,7 @@ export class OdataSourceComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     this.searchForm.valueChanges
       .pipe(takeUntil(this._onDestroy), distinct(), debounceTime(500))
-      .subscribe((value) => this.refreshList(value.filter));
+      .subscribe((value) => this.refreshList(value));
   }
 
   ngAfterViewInit() {
