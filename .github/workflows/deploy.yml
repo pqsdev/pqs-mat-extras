@@ -13,7 +13,7 @@ jobs:
     - name: Angular Deploy gh-pages Actions
       uses: AhsanAyaz/angular-deploy-gh-pages-actions@v1.4.0
       with:
-        angular_project_dir: examples
+        angular_project_dir: projects/examples
         github_access_token: ${{ secrets.GITHUB_TOKEN }} # see the Configuration section for how you can create secrets
         build_configuration: production # The build environment for the app. please look configurations in your angular.json
         base_href: /pqs-mat-extras/   # make sure this corresponds to https://<your_username>.github.io/<base_href>/
