@@ -11,6 +11,7 @@
     "ng": "ng",
     "start": "ng serve examples",
     "build": "ng build ngx-mat-extras",
+    "build:examples": "ng build examples --configuration production",
     "watch": "ng build ngx-mat-extras --watch --configuration development",
     "test": "ng test",
     "npm_pack": "cd dist/ngx-mat-extras && npm pack",
