@@ -25,7 +25,7 @@
 
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
     "forwardPorts": [
-        4200
+        "4200:4200"
     ],
     "workspaceFolder": "/workspaces/pqs-mat-extras",
     "workspaceMount": "type=volume,source=pqs-mat-extras,target=/worskpaces",
