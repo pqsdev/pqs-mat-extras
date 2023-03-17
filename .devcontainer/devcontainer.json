@@ -18,15 +18,22 @@
                 "dbaeumer.vscode-eslint",
                 "EditorConfig.EditorConfig",
                 "esbenp.prettier-vscode",
-                "johnpapa.Angular2"
+                "johnpapa.Angular2",
+                "devondcarew.bazel-code",
+                "gkalpak.aio-docs-utils",
+                "ms-vscode.vscode-typescript-tslint-plugin"
             ]
       }
     },
+"appPort": [
+    4000,
+    4200,
+    4433,
+    5000,
+    8080,
+    9876
+],
 
-    // Use 'forwardPorts' to make a list of ports inside the container available locally.
-    "forwardPorts": [
-        "4200:4200"
-    ],
     "workspaceFolder": "/workspaces/pqs-mat-extras",
     "workspaceMount": "type=volume,source=pqs-mat-extras,target=/worskpaces",
     // Use 'postCreateCommand' to run commands after the container is created.
